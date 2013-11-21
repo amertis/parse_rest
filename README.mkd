@@ -411,5 +411,12 @@ star_func(movie="The Matrix")
 {u'result': 4.5}
 ~~~~~
 
+Likewise you can invoke a cloud job using the `parse_rest.datatypes.Job` class:
 
+~~~~~ {python}
+from parse_rest.datatypes import Job
+
+simple_job = Job("simpleJob")
+simple_job()
+~~~~~
 That's it! This is a first try at a Python library for Parse, and is probably not bug-free. If you run into any issues, please get in touch -- dgrtwo@princeton.edu. Thanks!
