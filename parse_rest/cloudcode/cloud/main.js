@@ -22,3 +22,7 @@ Parse.Cloud.define("averageStars", function(request, response) {
     }
   });
 });
+
+Parse.Cloud.job("simpleJob", function (request, status) {
+    status.success("job completed successfully!");
+});

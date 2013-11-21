@@ -14,7 +14,7 @@ import datetime
 
 from core import ResourceRequestNotFound
 from connection import register, ParseBatcher
-from datatypes import GeoPoint, Object, Function
+from datatypes import GeoPoint, Object, Function, Job
 from user import User
 import query
 
@@ -346,6 +346,39 @@ class TestFunction(unittest.TestCase):
         star_func = Function("averageStars")
         ret = star_func(movie="The Matrix")
         self.assertAlmostEqual(ret["result"], 4.5)
+
+
+class TestJob(unittest.TestCase):
+    def setUp(self):
+        '''create and deploy cloud functions'''
+        original_dir = os.getcwd()
+
+        cloud_function_dir = os.path.join(os.path.split(__file__)[0], 'cloudcode')
+        os.chdir(cloud_function_dir)
+        # write the config file
+        with open("config/global.json", "w") as outf:
+            outf.write(GLOBAL_JSON_TEXT % (settings_local.APPLICATION_ID,
+                                           settings_local.MASTER_KEY))
+        try:
+            subprocess.call(["parse", "deploy"])
+        except OSError, why:
+            print "parse command line tool must be installed " \
+                "(see https://www.parse.com/docs/cloud_code_guide)"
+            self.skipTest(why)
+        os.chdir(original_dir)
+
+    def tearDown(self):
+        pass
+
+    def test_simple_job(self):
+        """test simpleJob background job"""
+        simple_job = Job("simpleJob")
+        ret = simple_job()
+        self.assertEqual(ret,{})
+
+
+
+
 
 
 class TestUser(unittest.TestCase):
